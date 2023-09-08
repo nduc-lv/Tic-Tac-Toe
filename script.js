@@ -51,9 +51,13 @@ function Player(name, token){
     const getToken = function(){
         return playerToken;
     }
+    const setName = function(name){
+        playerName = name;
+    }
     return {
         getName,
         getToken,
+        setName,
     }
 }
 // GameController controls the flow of the game
@@ -63,7 +67,14 @@ function GameController (){
     let player2 = Player("Player 2", "O");
     //only one player can play per during his round;
     let activePlayer = player1;
-
+    const setPlayerName = function (player, name){
+        if (player == "player1"){
+            player1.setName(name);
+        }
+        else{
+            player2.setName(name);
+        }
+    }
     //need to know who's turn to play
     const getActivePlayer = function (){
         return activePlayer;
@@ -186,6 +197,7 @@ function GameController (){
         //gameBoard for accessing board state.
         gameBoard: board.getBoard(),
         getActivePlayer,
+        setPlayerName,
     }
 }
 
@@ -197,11 +209,16 @@ function GameController (){
     let body = document.querySelector("body");
     let boardDiv = document.createElement("div");
     let playerTurn = document.createElement("div");
+    let form = document.querySelector("form");
+    let start = document.querySelector('[value="start"]');
+    let restartButton = document.createElement("button");
+    let dialog = document.querySelector("dialog");
+    
+    restartButton.value = "restart";
+    restartButton.textContent = "Restart";
     playerTurn.classList.add("player-turn");
     boardDiv.classList.add("board");
-    body.appendChild(playerTurn);
-    body.appendChild(boardDiv);
-    let dialog = document.querySelector("dialog");
+    
     //render the board on the page
     const renderBoard = function () {
         playerTurn.textContent = `${game.getActivePlayer().getName()}'s turn`;
@@ -218,7 +235,6 @@ function GameController (){
             }
         }
     }
-    renderBoard();
     //display winner
     const displayWinner = function (winner){
         //reset the game
@@ -232,8 +248,8 @@ function GameController (){
             gameOver.textContent = `${winner.getName()}!!!`;
         }
     }
-    //get the user's action
-    const getUserAction = function (event){
+    //play one round
+    const playRound = function (event){
         let cell = event.target;
         //check if the cell valid
         if (!cell.dataset){
@@ -260,8 +276,6 @@ function GameController (){
         renderBoard();
     }
     
-    //make the board listen for user's action
-    boardDiv.addEventListener("click", getUserAction);
     const restart = function (event){
         let button = event.target;
         console.log(button);
@@ -272,9 +286,35 @@ function GameController (){
             //render new game
             boardDiv.textContent = "";
             renderBoard();
-            //close modal
-            dialog.close();
         }
     }
-    dialog.addEventListener("click", restart);
+
+    //Add event listener
+
+    //make dialog close when click restart
+    dialog.addEventListener("click", (event) => {
+        restart(event);
+        //close modal
+        dialog.close();
+    });
+    //start the game if the user click start
+    start.addEventListener("click", (e) => {
+        e.preventDefault();
+        form.style.display = "none";
+        body.appendChild(restartButton);
+        body.appendChild(playerTurn);
+        body.appendChild(boardDiv);
+        renderBoard();
+    });
+    //change player name
+    form.addEventListener("change", function(){
+        let name1 = document.querySelector("#player-1").value;
+        let name2 = document.querySelector("#player-2").value;
+        game.setPlayerName("player1", name1);
+        game.setPlayerName("player2", name2);
+    })
+    //play the game
+    boardDiv.addEventListener("click", playRound);
+    //restart the game during a round
+    restartButton.addEventListener("click", restart);
 })()
