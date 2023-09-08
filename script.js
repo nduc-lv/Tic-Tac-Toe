@@ -296,7 +296,9 @@ function GameController (){
     dialog.addEventListener("click", (event) => {
         restart(event);
         //close modal
-        dialog.close();
+        if (event.target.value == "restart"){
+            dialog.close();
+        }
     });
     //start the game if the user click start
     start.addEventListener("click", (e) => {
