@@ -77,15 +77,106 @@ function GameController (){
     const printGame = function (){
         console.log(board.getBoard());
     }
+    
+    //decide who win
+    const getWinner = function (){
+        let gameBoard = board.getBoard();
+        let currentPlayer = getActivePlayer();
+        let currentToken = currentPlayer.getToken();
+        let count = 0; //count how many consecutive tokens
+        //check for every row
+        for (let row = 0; row < 3; row++){
+            count = 0;
+            for (let col = 0; col < 3; col++){
+                let cellValue = gameBoard[row][col].getCell();
+                if (cellValue == currentToken){
+                    count++;
+                }
+                else{
+                    //move to new row
+                    break;
+                }
+            }
+            if (count == 3){
+                return currentPlayer //winner
+            }
+        }
+        //check for every column
+        for (let col = 0; col < 3; col++){
+            count = 0;
+            for (let row = 0; row < 3; row++){
+                let cellValue = gameBoard[row][col].getCell();
+                if (cellValue == currentToken){
+                    count++;
+                }
+                else{
+                    //move to new col
+                    break;
+                }
+            }
+            if (count == 3){
+                return currentPlayer //winner
+            }
+        }
+        //check for the first diagonal
+        count = 0;
+        let row = 0;
+        let col = 0;
+        for (let offset = 0; offset < 3; offset++){
+            let cellValue = gameBoard[row + offset][col + offset].getCell();
+            if (cellValue == currentToken){
+                count++;
+            }
+            else{
+                break;
+            }
+        }
+        if (count == 3){
+            return currentPlayer;
+        }
+
+        //check for the second diagonal
+        count = 0;
+        row = 0;
+        col = 2;
+        for (let offset = 0; offset < 3; offset++){
+            let cellValue = gameBoard[row + offset][col - offset].getCell();
+            if (cellValue == currentToken){
+                count++;
+            }
+            else{
+                break;
+            }
+        }
+        if (count == 3){
+            return currentPlayer;
+        }
+
+        //check for a tie
+        for (let row = 0; row < 3; row++){
+            for (let col = 0; col < 3; col++){
+                let cellValue = gameBoard[row][col].getCell();
+                if (cellValue == "0"){
+                    return;
+                }
+            }
+        }
+        return Player("Tie", "0");
+    }
 
     //play one round of the game
     const playRound = function (cellRow, cellCol){
         let currentPlayer = getActivePlayer();
         board.setBoard(cellRow, cellCol, currentPlayer.getToken());
-        
-        switchPlayer();
         //print the board;
         printGame();
+        let winner = getWinner();
+        if (winner){
+            console.log(`Winner is ${winner.getName()}`);
+            return winner;
+        }
+        switchPlayer();
+        return;
     }
     //print game for the first time
     printGame();
@@ -94,19 +185,26 @@ function GameController (){
         playRound,
         //gameBoard for accessing board state.
         gameBoard: board.getBoard(),
+        getActivePlayer,
     }
 }
 
+//MAKE THE EXTERIOR OF THE GAME
 //dipslay controller
 (function () {
     let game = GameController();
     let board = game.gameBoard;
     let body = document.querySelector("body");
     let boardDiv = document.createElement("div");
+    let playerTurn = document.createElement("div");
+    playerTurn.classList.add("player-turn");
     boardDiv.classList.add("board");
+    body.appendChild(playerTurn);
     body.appendChild(boardDiv);
+    let dialog = document.querySelector("dialog");
     //render the board on the page
     const renderBoard = function () {
+        playerTurn.textContent = `${game.getActivePlayer().getName()}'s turn`;
         //loop through every cell and display the content
         for (let row = 0; row < 3; row++){
             for (let col = 0; col < 3; col++){
@@ -121,6 +219,19 @@ function GameController (){
         }
     }
     renderBoard();
+    //display winner
+    const displayWinner = function (winner){
+        //reset the game
+        dialog.showModal();
+        //announce the winner
+        let gameOver = document.querySelector(".game-over");
+        if (winner.getName() != "Tie"){
+          gameOver.textContent = `${winner.getName()} wins!!!`;  
+        }
+        else{
+            gameOver.textContent = `${winner.getName()}!!!`;
+        }
+    }
     //get the user's action
     const getUserAction = function (event){
         let cell = event.target;
@@ -137,11 +248,33 @@ function GameController (){
         }
         console.log(board[row][col].getCell());
         //play one round
-        game.playRound(row, col);
+        let winner = game.playRound(row, col);
+        dialog.addEventListener("click", restart);
+
+        //check if there's a winner
+        if (winner){
+            displayWinner(winner);
+        }
         //clear the board every turn
         boardDiv.textContent = "";
         renderBoard();
     }
+    
     //make the board listen for user's action
     boardDiv.addEventListener("click", getUserAction);
+    const restart = function (event){
+        let button = event.target;
+        console.log(button);
+        if (button.value == "restart"){
+            //reset the game
+            game = GameController();
+            board = game.gameBoard;
+            //render new game
+            boardDiv.textContent = "";
+            renderBoard();
+            //close modal
+            dialog.close();
+        }
+    }
+    dialog.addEventListener("click", restart);
 })()

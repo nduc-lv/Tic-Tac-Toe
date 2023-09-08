@@ -5,6 +5,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
 }
 .board{
     width: 50vh;
