@@ -213,9 +213,10 @@ function GameController (){
     let start = document.querySelector('[value="start"]');
     let restartButton = document.createElement("button");
     let dialog = document.querySelector("dialog");
-    
+
     restartButton.value = "restart";
     restartButton.textContent = "Restart";
+    restartButton.classList.add("restart-board");
     playerTurn.classList.add("player-turn");
     boardDiv.classList.add("board");
     
@@ -310,6 +311,12 @@ function GameController (){
     form.addEventListener("change", function(){
         let name1 = document.querySelector("#player-1").value;
         let name2 = document.querySelector("#player-2").value;
+        if (name1 == ""){
+            name1= "Player 1";
+        }
+        if (name2 == ""){
+            name2 = "Player 2";
+        }
         game.setPlayerName("player1", name1);
         game.setPlayerName("player2", name2);
     })

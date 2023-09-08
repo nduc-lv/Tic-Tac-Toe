@@ -6,24 +6,27 @@
     <title>Document</title>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 </head>
 <body>
     <dialog>
         <div class = "game-over">
 
         </div>
-        <button value = "restart">
+        <button value = "restart" class = "restart-modal">
             Restart
         </button>
     </dialog>
     <form action="">
         <p>
             <label for="player-1">First player's name</label>
-            <input type="text" id = "player-1" value = "Player 1" placeholder="Player 1">
+            <input type="text" id = "player-1" value = "Player 1" placeholder="Player 1" required>
         </p>
         <p>
             <label for="player-2">Second player's name</label>
-            <input type="text" id = "player-2" value = "Player 2" placeholder="Player 2">
+            <input type="text" id = "player-2" value = "Player 2" placeholder="Player 2" required>
         </p>
         <button value="start">
             start

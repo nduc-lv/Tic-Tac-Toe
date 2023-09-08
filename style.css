@@ -1,3 +1,17 @@
+:root{
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    --form-background: rgba(3,45,61,255);
+    --form-input-1: rgba(188,242,240,255);
+    --form-input-2: rgba(255,240,209,255);
+    --form-start: rgba(128,178,185,255);
+    --cell-color: rgba(231,228,209,255);
+    --board-background: rgba(230,245,248,255);
+    --restart-color: rgba(149,129,120,255);
+    --player-turn: #54190a;
+    --modal-background: rgba(30,45,52,255);
+    --modal-restart: #f38a4c;
+}
 body{
     margin: 0;
     padding: 0;
@@ -9,6 +23,7 @@ body{
     flex-direction: column;
     justify-content: center;
     gap: 20px;
+    background-color: var(--board-background);
 }
 .board{
     width: 50vh;
@@ -30,4 +45,121 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+form{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--form-background);
+
+}
+form button{
+    width: 50%;
+    height: 2rem;
+    font-size: 1rem;
+}
+form p{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    align-self: stretch;
+    padding: 0;
+    margin: 0;
+}
+input{
+    box-sizing: border-box;
+    width: max(250px, 20%);
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    border: none;
+    background-color: #dddddd;
+}
+#player-1{
+    background-color: var(--form-input-1);
+}
+#player-2{
+    background-color: var(--form-input-2);
+}
+
+label{
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+button[value="start"]{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--form-start);
+    width: max(15%, 250px);
+    padding: 20px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+}
+.cell{
+    background-color: var(--cell-color);
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.board{
+    border-radius: 5px;
+    background-color: black;
+}
+.restart-board{
+    background-color: var(--restart-color);
+    color: white;
+    font-weight: bold;
+    padding: 15px;
+    text-transform: uppercase;
+    border: none;
+    width: max(15%, 250px);
+    border-radius: 15px;
+    font-size: 1rem;
+}
+.player-turn{
+    color: var(--player-turn);
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+dialog::backdrop{
+    background-color: rgba(0, 0, 0, 0.3);
+}
+dialog[open]{
+    width: 30%;
+    height: 40%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--modal-background);
+}
+.game-over{
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.restart-modal{
+    box-sizing: border-box;
+    text-transform: uppercase;
+    color: white;
+    border-radius: 15px;
+    padding: 15px;
+    width: max(30%, 250px);
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: black;
+    border: none;
 }
