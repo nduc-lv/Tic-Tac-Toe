@@ -1,4 +1,4 @@
-// Make the core of the game
+// MAKE THE CORE OF THE GAME
 
 // Board object to store the state of the game
 function Gameboard(){
@@ -89,10 +89,59 @@ function GameController (){
     }
     //print game for the first time
     printGame();
+
     return {
         playRound,
         //gameBoard for accessing board state.
         gameBoard: board.getBoard(),
     }
 }
-let game = GameController();
+
+//dipslay controller
+(function () {
+    let game = GameController();
+    let board = game.gameBoard;
+    let body = document.querySelector("body");
+    let boardDiv = document.createElement("div");
+    boardDiv.classList.add("board");
+    body.appendChild(boardDiv);
+    //render the board on the page
+    const renderBoard = function () {
+        //loop through every cell and display the content
+        for (let row = 0; row < 3; row++){
+            for (let col = 0; col < 3; col++){
+                let cell = board[row][col];
+                let cellDiv = document.createElement("div");
+                cellDiv.classList.add("cell");
+                cellDiv.dataset.row = row;
+                cellDiv.dataset.col = col;
+                cellDiv.textContent = cell.getCell() != "0" ? cell.getCell() : "";
+                boardDiv.appendChild(cellDiv);
+            }
+        }
+    }
+    renderBoard();
+    //get the user's action
+    const getUserAction = function (event){
+        let cell = event.target;
+        //check if the cell valid
+        if (!cell.dataset){
+            return;
+        }
+        //get the position of the cell
+        let row = cell.dataset.row;
+        let col = cell.dataset.col;
+        //check if the cell is free
+        if (board[row][col].getCell() != "0"){
+            return;
+        }
+        console.log(board[row][col].getCell());
+        //play one round
+        game.playRound(row, col);
+        //clear the board every turn
+        boardDiv.textContent = "";
+        renderBoard();
+    }
+    //make the board listen for user's action
+    boardDiv.addEventListener("click", getUserAction);
+})()
